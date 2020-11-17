@@ -28,7 +28,7 @@ Read in the data.
 
 ```{r}
 homicide_df = 
-  read_csv("homicide_data/homicide-data.csv") %>% 
+  read_csv("./homicide_data/homicide-data.csv") %>% 
   mutate(
     city_state = str_c(city, state, sep = "_"),
     resolved = case_when(
@@ -110,3 +110,40 @@ homicide_df =
   filter(city_state != "Tulsa_AL") %>% 
   nest(data = resolved)
 ```
+
+
+## Problem 2
+
+```{r import and spaghetti plot, error = TRUE}
+path_df = 
+  tibble(
+    path = list.files("lda_data"),
+  ) %>% 
+  mutate(
+    path = str_c("lda_data/", path),
+    data = map(path, read_csv)
+    ) %>% 
+  unnest(data) %>% 
+  separate(
+    path,
+    into = c(NA, NA, "arm", "subj", NA)
+  ) %>%
+  pivot_longer(
+    starts_with("week"),
+    names_to = "week",
+    values_to = "values"
+  ) %>%
+  mutate(
+    week = as.numeric(sub("week_", "", week))
+  )
+
+experiment_df = path_df %>% filter(arm == "exp")
+control_df = path_df %>% filter(arm == "con")
+
+ggplot(control_df, aes(x = week, y = values, group = subj)) +
+  geom_line() +
+  geom_line(data = experiment_df, color = "red")
+  labs(y = "Observations", x = "Week", title = "Observations on each Subject Over Time")
+```
+
+From the plot, the general trend of control arm subjects seem to have stable observation values over time (period of weeks). On the other hand, the experimental arm subjects generally seem to trend upwards in throughout the course of the obervational time.
