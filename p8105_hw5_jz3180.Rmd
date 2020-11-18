@@ -174,7 +174,7 @@ prop_reject %>%
   geom_point() + geom_smooth() +
   labs(y = "Proportion of Rejected Null", x = "True Value of Mu", title = "Power of Test vs. True Value of Mu")
 ```
-
+Looking at this plot, as the true value of mu (effect size) increases, the power of the test also increases in a shape similar to an increasing log function. This increase levels off around 1, which is the highest value that power can be.
 
 ```{r plot two, message = FALSE, warning = FALSE}
 avg_mu = 
@@ -189,7 +189,6 @@ avg_mu %>%
   labs(y = "Average Estimate of Mu", x = "True Value of Mu", title = "Average of Mu vs. True Value of Mu")
 ```
 
-
 ```{r plot three, message = FALSE, warning = FALSE}
 avg_mu_reject = 
   data_sim %>%
@@ -199,6 +198,7 @@ avg_mu_reject =
     avg_mu_reject = mean(estimate)) 
 avg_mu_reject %>% 
   ggplot(aes(x = mu, y = avg_mu_reject)) +
-  geom_point() + geom_smooth(method = lm) +
+  geom_point() + geom_smooth(method=lm)
   labs(y = "Average Estimate of Mu (Rejected)", x = "True Value of Mu", title = "Average of Mu for Rejected Nulls vs. True Value of Mu")
 ```
+Looking at this plot, the sample average of mu across tests for which the null is rejected is more approximately equal to the true value of mu as the true value of mu (effect size) increases. This makes sense because with lower power, the closer the average estimate of mu to the null, the more likely it is to be accepted instead of rejected. 
